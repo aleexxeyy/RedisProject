@@ -298,7 +298,7 @@ MiniRedis
 ***Clone repository***
 **Bash**
 ```text
-git clone https://github.com/aleexxeyy/RedisProject )
+git clone https://github.com/aleexxeyy/RedisProject 
 ```
 
 ***Run Backend***
