@@ -52,28 +52,22 @@ Frontend | Next.js Admin Dashboard |
 
 Поддерживаемые команды:
 
-```
+```text
 SET key value
 GET key
 DEL key
 ```
 
----
-
-### ⏳ TTL Expiration
-
+# ⏳ TTL Expiration
 Каждый ключ может иметь время жизни.
-
-```
+```text
 SET session:1 "active" EX 60
 ```
-
 Через 60 секунд ключ автоматически удалится.
 
----
+----
 
-### 🧠 Memory Eviction Strategies
-
+# 🧠 Memory Eviction Strategies
 Когда кэш достигает лимита, запускается политика вытеснения.
 
 | Strategy | Description |
@@ -81,34 +75,36 @@ SET session:1 "active" EX 60
 LRU | Least Recently Used |
 FIFO | First In First Out |
 
----
+----
 
-### 📡 Pub/Sub Messaging
-
+# 📡 Pub/Sub Messaging
 Система обмена событиями между клиентами.
 
-```
+```text
 SUBSCRIBE notifications
 PUBLISH notifications "New user registered"
 ```
 
 Используется **Observer Pattern**.
 
----
+----
 
-### 📊 Real-Time Monitoring
-
+# 📊 Real-Time Monitoring
 Админ-панель отображает:
 
 - Cache Hits / Misses
+
 - количество ключей
+
 - использование памяти
+
 - TTL cleanup events
+
 - Pub/Sub события
 
-Все данные приходят **в реальном времени через WebSockets**.
+Все данные приходят в реальном времени через **WebSockets**.
 
----
+----
 
 # 🏗 System Architecture
 
@@ -130,36 +126,29 @@ PUBLISH notifications "New user registered"
 |      |                                         |
 |      +-------------------------+               |
 |      |                         |               |
-| ConcurrentDictionary      Eviction Strategy   |
+| ConcurrentDictionary      Eviction Strategy    |
 |      |                         |               |
 |      v                         v               |
-|   CacheEntry             LRU / FIFO            |
+|   CacheEntry              LRU / FIFO           |
 |                                                |
 | Background Worker                              |
 | TTL Expiration Cleaner                         |
 +------------------------------------------------+
 ```
 
----
+----
 
 # 🧩 Design Patterns
-
-### Strategy Pattern
-
+***Strategy Pattern***
 Используется для выбора политики вытеснения.
 
-```
+```text
 IEvictionStrategy
  ├── LruStrategy
  └── FifoStrategy
 ```
 
-Позволяет легко добавлять новые алгоритмы.
-
----
-
-### Observer Pattern
-
+***Observer Pattern***
 Используется для Pub/Sub системы.
 
 ```
@@ -170,47 +159,39 @@ Publisher
            +--- Subscribers
 ```
 
----
-
-### Factory Pattern
-
+***Factory Pattern***
 Преобразует текстовые команды в объекты.
 
-```
+```text
 SET key value EX 60
 ```
-
 ↓
-
-```
+```text
 ICommand
 ```
 
----
+----
 
 # 🧠 Core Data Structures
-
-## ConcurrentDictionary
-
+**ConcurrentDictionary**
 Основное хранилище:
-
-```
+```text
 ConcurrentDictionary<string, CacheEntry>
 ```
 
-Преимущества:
+***Преимущества:***
 
 - потокобезопасность
+
 - высокая производительность
+
 - минимальные блокировки
 
 ---
 
-## CacheEntry
-
+**CacheEntry**
 Каждая запись хранит:
-
-```
+```text
 Key
 Value
 CreatedAt
@@ -218,116 +199,86 @@ TTL
 LastAccessTime
 ```
 
-Это позволяет реализовать:
+***Это позволяет реализовать:***
 
 - TTL expiration
+
 - LRU
+
 - метрики использования
 
----
+-----
 
 # ⚙ Background Workers
-
+---
 Фоновый сервис реализован через:
 
-```
+```text
 IHostedService
 ```
 
-Worker:
+***Worker:***
 
-1. периодически просыпается
-2. проверяет ключи
-3. удаляет истёкшие TTL
+- периодически просыпается
+
+- проверяет ключи
+
+- удаляет истёкшие TTL
 
 Будущая оптимизация:
 
-```
+```text
 Min Heap (priority queue)
 ```
 
----
+----
 
 # 📊 Admin Dashboard
+Frontend реализован на Next.js.
 
-Frontend реализован на **Next.js**.
-
-### Dashboard
-
+***Dashboard***
 Отображает:
 
 - Cache Hits
+
 - Cache Misses
+
 - количество ключей
+
 - использование памяти
+
 - события TTL
 
 ---
 
-### Key Explorer
-
+***Key Explorer***
 Просмотр всех ключей.
 
-| Key | Value | TTL |
+| **Key** |	**Value**	| **TTL** |
 |---|---|---|
 
-Можно:
+***Можно:***
 
 - создать ключ
+
 - изменить
+
 - удалить
 
----
+----
 
-### Console
-
+# Console
 Терминал для отправки команд:
 
-```
+```text
 GET user:1
 SET counter 100
 DEL session:42
 ```
-
----
-
-### Pub/Sub Tester
-
-Позволяет тестировать события в реальном времени.
-
----
-
-# 📸 Screenshots
-
-## Admin Dashboard
-
-```
-(Добавь сюда скриншот админки)
-
-docs/images/dashboard.png
-```
-
----
-
-## Key Explorer
-
-```
-docs/images/key-explorer.png
-```
-
----
-
-## Console
-
-```
-docs/images/console.png
-```
-
----
+----
 
 # 📂 Project Structure
-
-```
+```text
 MiniRedis
 │
 ├── backend
@@ -341,90 +292,54 @@ MiniRedis
     └── nextjs-dashboard
 ```
 
----
+----
 
 # 🚀 Getting Started
-
-## Clone repository
-
+***Clone repository***
+**Bash**
+```text
+git clone [https://github.com/yourusername/miniredis](https://github.com/yourusername/miniredis)
 ```
-git clone https://github.com/yourusername/miniredis
-```
 
----
-
-## Run Backend
-
-```
+***Run Backend***
+**Bash**
+```text
 cd backend
 dotnet run
 ```
 
-API будет доступно:
-
-```
+**API будет доступно:**
+```text
 http://localhost:5000
 ```
+----
 
----
-
-## Run Frontend
-
-```
+***Run Frontend***
+***Bash**
+```text
 cd frontend
 npm install
 npm run dev
 ```
-
-Админка:
-
-```
+**Админка:**
+```text
 http://localhost:3000
 ```
-
----
-
-# 📈 Roadmap
-
-### v1
-
-- [x] Cache Engine
-- [x] SET / GET / DEL
-- [x] TTL
-
-### v2
-
-- [ ] LRU eviction
-- [ ] FIFO eviction
-- [ ] metrics
-
-### v3
-
-- [ ] Pub/Sub
-- [ ] WebSocket streaming
-- [ ] Admin Dashboard
-
-### v4
-
-- [ ] Persistence
-- [ ] Cluster mode
-- [ ] Sharding
-
----
+----
 
 # 🎯 Learning Goals
-
-MiniRedis создан для изучения:
+**MiniRedis** создан для изучения:
 
 - архитектуры cache систем
+
 - потокобезопасных структур данных
+
 - backend design patterns
+
 - real-time систем
 
 Проект вдохновлён Redis, но **реализован полностью самостоятельно для обучения**.
+----
 
----
-
-# ⭐ Support
-
+⭐ Support
 Если проект оказался полезным — поставь ⭐ репозиторию.
